@@ -27,6 +27,7 @@ internal class Program
         host = Dns.GetHostEntry(Dns.GetHostName());
         foreach (IPAddress ip in host.AddressList)
         {
+            Console.WriteLine(ip);
             if (ip.AddressFamily == AddressFamily.InterNetwork) return ip;
         }
         //return new WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();

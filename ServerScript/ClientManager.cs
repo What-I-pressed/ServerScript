@@ -20,6 +20,7 @@ namespace ServerScript
 
         public static void AddClient(int ID, IPEndPoint endPoint)
         {
+            endPoint.Port -= 1;
             _clients.Add(new Client(ID, endPoint));
         }
 
