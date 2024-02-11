@@ -20,19 +20,14 @@ namespace ServerScript
 
         public async Task StartListen()
         {
-            Thread thread = new Thread(() => Listen());
-
-            //_tcpListener.BeginAcceptTcpClient(AcceptClient, null);
-        }
-
-        private void Listen()
-        {
             Console.WriteLine("Server start listen");
             while (true)
             {
                 TcpClient tcpClient = _tcpListener.AcceptTcpClient();
                 Console.WriteLine("New client has been accepted!!");
             }
+
+            //_tcpListener.BeginAcceptTcpClient(AcceptClient, null);
         }
 
         private void AcceptClient(IAsyncResult res) { 
