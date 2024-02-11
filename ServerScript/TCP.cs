@@ -14,8 +14,13 @@ namespace ServerScript
 
         public TCP()
         {
-            _tcpListener = new TcpListener(new IPEndPoint(IPAddress.Parse("127.0.0.1"), _port));
-            _tcpListener.Start();
+            try
+            {
+                _tcpListener = new TcpListener(new IPEndPoint(IPAddress.Parse("127.0.0.1"), _port));
+                _tcpListener.Start();
+            }
+            catch(Exception ex) { Console.WriteLine(ex.Message); }
+            
         }
 
         public async Task StartListen()
