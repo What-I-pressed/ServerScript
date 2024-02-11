@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System;
+using System.Net.NetworkInformation;
 
 namespace ServerScript
 {
@@ -13,7 +14,7 @@ namespace ServerScript
 
         public TCP()
         {
-            _tcpListener = new TcpListener(_port);
+            _tcpListener = new TcpListener(new IPEndPoint(IPAddress.Parse("13.36.169.142"), _port));
             _tcpListener.Start();
         }
 
