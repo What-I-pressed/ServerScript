@@ -96,7 +96,7 @@ namespace ServerScript
                                 nStream.Read(message, 0, 128);
                                 Console.WriteLine("NetworkStream was copied to memoryStream");
                                 Console.WriteLine("Server sending connection request...");
-                                socket.Connect(ClientManager.GetClientIPEndPoint(BitConverter.ToInt32(new byte[] { message[5], message[6], message[7], message[8] })));             //Change IT!!!@!!!!!!!!!!
+                                socket.Connect(ClientManager.GetClientIPEndPoint(BitConverter.ToInt32(new byte[] { message[0], message[1], message[2], message[3] })));             //Change IT!!!@!!!!!!!!!!
                                 Console.WriteLine("Connection request was accepted");
                                 SocketAsyncEventArgs socketAsyncEventArgs = new SocketAsyncEventArgs();
                                 socketAsyncEventArgs.SetBuffer(message);
@@ -111,7 +111,7 @@ namespace ServerScript
                 catch (ArgumentException ex) { Console.WriteLine("Argument exception \n" + ex.Message); }
                 catch (Exception ex) { 
                     Console.WriteLine(ex.Message);
-                    break;
+                    return;
                 }
                 System.Threading.Thread.Sleep(200);
             }

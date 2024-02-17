@@ -39,9 +39,12 @@ namespace ServerScript
 
         public static IPEndPoint GetClientIPEndPoint(int ID)
         {
-            for(int i = 0; i < _clients.Count; i++)
-                if (_clients[i].ID == ID) 
+            for (int i = 0; i < _clients.Count; i++)
+            {
+                Console.WriteLine($"Requested ID {ID}");
+                if (_clients[i].ID == ID)
                     return _clients[i].endPoint;
+            }
 
             return null;
         }
