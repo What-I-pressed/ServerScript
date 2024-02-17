@@ -88,10 +88,13 @@ namespace ServerScript
 
                                 break;
                             case (byte)RequestType.SendTextMessage:
-
+                                Console.WriteLine("Send request was accepted by server");
                                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                                Console.WriteLine("Socket was created");
                                 MemoryStream memoryStream = new MemoryStream();
+                                Console.WriteLine("Memory stream was created");
                                 nStream.CopyTo(memoryStream);
+                                Console.WriteLine("NetworkStream was copied to memoryStream");
                                 byte[] message = memoryStream.GetBuffer();
                                 Console.WriteLine("Server sending connection request...");
                                 socket.Connect(ClientManager.GetClientIPEndPoint(BitConverter.ToInt32(new byte[] { message[5], message[6], message[7], message[8] })));             //Change IT!!!@!!!!!!!!!!
