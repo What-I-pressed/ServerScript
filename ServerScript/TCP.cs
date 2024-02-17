@@ -18,7 +18,8 @@ namespace ServerScript
         {
             try
             {
-                _tcpListener = new TcpListener(new IPEndPoint(IPAddress.Parse("127.0.0.1"), _port));
+                IPAddress serverIP = Dns.GetHostAddresses(Dns.GetHostName())[0];
+                _tcpListener = new TcpListener(new IPEndPoint(serverIP, _port));
                 _tcpListener.Start();
             }
             catch(Exception ex) { Console.WriteLine(ex.Message); }
@@ -72,34 +73,37 @@ namespace ServerScript
                     Console.WriteLine("Connection accepted");
                     byte[] buffer = new byte[5];
                     nStream.Read(buffer, 0, 5);
-                    switch (buffer[0])
-                    {
-                        case (byte)RequestType.AddClient:
-                            ClientManager.AddClient(BitConverter.ToInt32(new byte[] { buffer[1], buffer[2], buffer[3], buffer[4] }, 0),
-                                client.Client.RemoteEndPoint as IPEndPoint);
-                            Console.WriteLine("New client has been added");
-                            break;
-                        case (byte)RequestType.AudioConnectWith:
+                    if(buffer.Length !< 3) {
+                        switch (buffer[0])
+                        {
+                            case (byte)RequestType.AddClient:
+                                ClientManager.AddClient(BitConverter.ToInt32(new byte[] { buffer[1], buffer[2], buffer[3], buffer[4] }, 0),
+                                    client.Client.RemoteEndPoint as IPEndPoint);
+                                Console.WriteLine("New client has been added");
+                                break;
+                            case (byte)RequestType.AudioConnectWith:
 
 
-                            break;
-                        case (byte)RequestType.SendTextMessage:
+                                break;
+                            case (byte)RequestType.SendTextMessage:
 
-                            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                            socket.Connect(ClientManager.GetClientIPEndPoint(BitConverter.ToInt32(new byte[] { buffer[1], buffer[2], buffer[3], buffer[4] })));
-                            buffer = new byte[nStream.Length];
-                            nStream.Read(buffer, 0, buffer.Length);
-                            SocketAsyncEventArgs socketAsyncEventArgs = new SocketAsyncEventArgs();
-                            socketAsyncEventArgs.SetBuffer(buffer);
-                            Task.Run(() => socket.SendAsync(socketAsyncEventArgs));
-                            Console.WriteLine("Message was forwarded");
-                            break;
+                                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                                socket.Connect(ClientManager.GetClientIPEndPoint(BitConverter.ToInt32(new byte[] { buffer[1], buffer[2], buffer[3], buffer[4] })));
+                                buffer = new byte[nStream.Length];
+                                nStream.Read(buffer, 0, buffer.Length);
+                                SocketAsyncEventArgs socketAsyncEventArgs = new SocketAsyncEventArgs();
+                                socketAsyncEventArgs.SetBuffer(buffer);
+                                Task.Run(() => socket.SendAsync(socketAsyncEventArgs));
+                                Console.WriteLine("Message was forwarded");
+                                break;
 
+                        }
                     }
+                    
                 }
                 catch (ArgumentException ex) { Console.WriteLine("Argument exception \n" + ex.Message); }
                 catch (Exception ex) { Console.WriteLine(ex.Message); }
-                Thread.Sleep(200);
+                System.Threading.Thread.Sleep(200);
             }
         }
     }
