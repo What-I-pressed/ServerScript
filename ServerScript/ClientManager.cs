@@ -50,7 +50,8 @@ namespace ServerScript
         {
             foreach(Client client in _clients)
             {
-                Console.WriteLine(client.ID);
+                Console.Write(client.ID);
+                Console.WriteLine($"   IP : {client.endPoint}");
             }
         }
     }

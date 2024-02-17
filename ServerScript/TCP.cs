@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.IO;
 
 namespace ServerScript
 {
@@ -92,7 +93,9 @@ namespace ServerScript
                                 MemoryStream memoryStream = new MemoryStream();
                                 nStream.CopyTo(memoryStream);
                                 byte[] message = memoryStream.GetBuffer();
-                                socket.Connect(ClientManager.GetClientIPEndPoint(BitConverter.ToInt32(new byte[] { message[1], message[2], message[3], message[4] })));             //Change IT!!!@!!!!!!!!!!
+                                Console.WriteLine("Server sending connection request...");
+                                socket.Connect(ClientManager.GetClientIPEndPoint(BitConverter.ToInt32(new byte[] { message[5], message[6], message[7], message[8] })));             //Change IT!!!@!!!!!!!!!!
+                                Console.WriteLine("Connection request was accepted");
                                 SocketAsyncEventArgs socketAsyncEventArgs = new SocketAsyncEventArgs();
                                 socketAsyncEventArgs.SetBuffer(message);
                                 Task.Run(() => socket.SendAsync(socketAsyncEventArgs));
