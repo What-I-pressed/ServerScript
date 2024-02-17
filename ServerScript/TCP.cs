@@ -73,13 +73,14 @@ namespace ServerScript
                     Console.WriteLine("Connection accepted");
                     byte[] buffer = new byte[5];
                     nStream.Read(buffer, 0, 5);
-                    if(buffer.Length !< 3) {
+                    if(buffer.Length > 3) {
                         switch (buffer[0])
                         {
                             case (byte)RequestType.AddClient:
                                 ClientManager.AddClient(BitConverter.ToInt32(new byte[] { buffer[1], buffer[2], buffer[3], buffer[4] }, 0),
                                     client.Client.RemoteEndPoint as IPEndPoint);
                                 Console.WriteLine("New client has been added");
+                                ClientManager.Info();
                                 break;
                             case (byte)RequestType.AudioConnectWith:
 
@@ -88,11 +89,12 @@ namespace ServerScript
                             case (byte)RequestType.SendTextMessage:
 
                                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                                socket.Connect(ClientManager.GetClientIPEndPoint(BitConverter.ToInt32(new byte[] { buffer[1], buffer[2], buffer[3], buffer[4] })));
-                                buffer = new byte[nStream.Length];
-                                nStream.Read(buffer, 0, buffer.Length);
+                                MemoryStream memoryStream = new MemoryStream();
+                                nStream.CopyTo(memoryStream);
+                                byte[] message = memoryStream.GetBuffer();
+                                socket.Connect(ClientManager.GetClientIPEndPoint(BitConverter.ToInt32(new byte[] { message[1], message[2], message[3], message[4] })));             //Change IT!!!@!!!!!!!!!!
                                 SocketAsyncEventArgs socketAsyncEventArgs = new SocketAsyncEventArgs();
-                                socketAsyncEventArgs.SetBuffer(buffer);
+                                socketAsyncEventArgs.SetBuffer(message);
                                 Task.Run(() => socket.SendAsync(socketAsyncEventArgs));
                                 Console.WriteLine("Message was forwarded");
                                 break;

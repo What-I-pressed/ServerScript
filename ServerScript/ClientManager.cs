@@ -45,5 +45,13 @@ namespace ServerScript
 
             return null;
         }
+
+        public static void Info()
+        {
+            foreach(Client client in _clients)
+            {
+                Console.WriteLine(client.ID);
+            }
+        }
     }
 } 
